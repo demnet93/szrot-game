@@ -275,7 +275,9 @@ function buy(it){if(player.gear[it.id]===true)return;const p=priceOf(it);
 function startFight(enemy,terr,defT){fight={enemy,hp:player.hp,ehp:enemy.hp,terr,defT};uiOpen=true;SFX.hit();
  document.getElementById('fightOverlay').classList.remove('hidden');
  document.getElementById('fightTitle').textContent='⚔️ '+enemy.name+' (tura: TY)';
- document.getElementById('fightEnemyIcon').textContent=enemy.icon||'👊';
+ const fi=document.getElementById('fightEnemyIcon');
+ if(enemy.spr&&SPR[enemy.spr]){fi.innerHTML='';const c=document.createElement('canvas');c.width=64;c.height=64;c.style.width='52px';c.style.height='52px';c.getContext('2d').drawImage(SPR[enemy.spr],0,0,64,64);fi.appendChild(c)}
+ else{fi.innerHTML='';fi.textContent=enemy.icon||'👊'}
  document.getElementById('fightLog').innerHTML='';updateFightUI()}
 function flog(m){document.getElementById('fightLog').innerHTML=m+'<br>'+document.getElementById('fightLog').innerHTML}
 function updateFightUI(){document.getElementById('fightPlayerBar').style.width=Math.max(0,fight.hp/player.maxHp*100)+'%';
@@ -328,4 +330,3 @@ function doAction(){
 }
 function eat(){if(player.food>0){player.food--;const v=player.furn.kitchen?80:40;player.hunger=Math.max(0,player.hunger-v);SFX.eat();notify('🍔 Zjadłeś! -'+v+' głodu')}else{SFX.error();notify('Nie masz jedzenia!','bad')}}
 function drinkF(){if(player.drink>0){player.drink--;player.thirst=Math.max(0,player.thirst-40);SFX.drink();notify('🥤 Wypiłeś!')}else{SFX.error();notify('Nie masz picia!','bad')}}
-

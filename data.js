@@ -23,7 +23,8 @@ const DECOR=[
  {s:'block',x:1480,y:170,w:170},{s:'block',x:1800,y:200,w:160},{s:'block',x:1850,y:430,w:150},
  {s:'shopfront',x:275,y:900,w:150},{s:'scrapyard',x:1700,y:850,w:150},{s:'pawnshop',x:610,y:1290,w:140},{s:'station',x:1700,y:1200,w:200},
  {s:'construction',x:900,y:800,w:90},{s:'construction',x:1150,y:950,w:90},{s:'construction',x:950,y:1010,w:80},
- {s:'construction',x:200,y:1260,w:90},{s:'construction',x:320,y:1330,w:80}
+ {s:'construction',x:200,y:1260,w:90},{s:'construction',x:320,y:1330,w:80},
+ {s:'rysio',x:330,y:985,w:44},{s:'henio',x:680,y:1365,w:44}
 ];
 const LOOT={bottle:{name:'Butelka',w:1,xp:1},can:{name:'Puszka',w:1,xp:1},scrap:{name:'Złom',w:2,xp:3},copper:{name:'Miedź',w:2,xp:8},electro:{name:'Elektronika',w:3,xp:15}};
 const JUNK=[
@@ -57,7 +58,7 @@ const BASES=[
  {name:'Melina w piwnicy',cost:1000,min:5},{name:'Garaż',cost:5000,min:10},
  {name:'Kamienica',cost:20000,min:15},{name:'WILLA PREZESA 👑',cost:100000,min:20}
 ];
-const BICON=['','📦','⛺','🏚️','🏠','','🏰'];
+const BICON=['','📦','','🏚️','🏠','','🏰'];
 const BQ=[{e:40,h:20,thief:.25},{e:60,h:30,thief:.2},{e:90,h:50,thief:.15},{e:95,h:55,thief:.1},{e:100,h:60,thief:.05},{e:100,h:70,thief:0},{e:100,h:80,thief:0}];
 const FURN=[
  {id:'sleepingbag',icon:'🛏️',name:'Śpiwór',cost:200,desc:'sen +10% energii'},
@@ -88,15 +89,15 @@ const TRAIND=[
  {id:'odp',icon:'🛡️',name:'Odporność',desc:'+8 max HP'}
 ];
 const ROSTER=[
- {n:2,str:3,hp:30,z:'bloki',name:'Zbyszek',icon:'🧔',lvl:1},
- {n:2,str:6,hp:55,z:'budowa',name:'Ochroniarz',icon:'👮',lvl:1},
- {n:2,str:5,hp:45,z:'plac',name:'Kieszonkowiec',icon:'🕵️',lvl:3},
- {n:2,str:8,hp:70,z:'dworzec',name:'Dworcowy',icon:'🧥',lvl:4},
- {n:1,str:10,hp:90,z:'bloki',name:'Mietek',icon:'👨',lvl:5},
- {n:2,str:12,hp:100,z:'budowa',name:'Brygadzista',icon:'👷',lvl:6},
- {n:1,str:15,hp:130,z:'dworzec',name:'Szef Dworca',icon:'🕴️',lvl:8},
- {n:2,str:20,hp:180,z:'magazyn',name:'Celnik',icon:'🕵️',lvl:12},
- {n:1,str:26,hp:260,z:'magazyn',name:'Magazynier Boss',icon:'📦',lvl:16}
+ {n:2,str:3,hp:30,z:'bloki',name:'Zbyszek',icon:'🧔',spr:'zbyszek',lvl:1},
+ {n:2,str:6,hp:55,z:'budowa',name:'Ochroniarz',icon:'👮',spr:'ochroniarz',lvl:1},
+ {n:2,str:5,hp:45,z:'plac',name:'Kieszonkowiec',icon:'🕵️',spr:'kieszonkowiec',lvl:3},
+ {n:2,str:8,hp:70,z:'dworzec',name:'Dworcowy',icon:'🧥',spr:'zbyszek',lvl:4},
+ {n:1,str:10,hp:90,z:'bloki',name:'Mietek',icon:'👨',spr:'mietek',lvl:5},
+ {n:2,str:12,hp:100,z:'budowa',name:'Brygadzista',icon:'👷',spr:'brygadzista',lvl:6},
+ {n:1,str:15,hp:130,z:'dworzec',name:'Szef Dworca',icon:'🕴️',spr:'szef',lvl:8},
+ {n:2,str:20,hp:180,z:'magazyn',name:'Celnik',icon:'🕵️',spr:'celnik',lvl:12},
+ {n:1,str:26,hp:260,z:'magazyn',name:'Magazynier Boss',icon:'📦',spr:'mietek',lvl:16}
 ];
 let territories=[
  {id:'park',name:'Park',owner:'Ekipa spod ławki',reqLevel:2,reqRespect:5,boss:{name:'Karyn',str:4,hp:40,icon:'🧑'},bonus:'+30% butelek',mx:550,my:480},
@@ -125,4 +126,3 @@ const EVENTS=[
  {txt:'👮 Strażnik skupu chce łapówkę 20zł za lepsze ceny...',a:{l:'💵 Zapłać (20zł)',f:()=>{player.money-=20;addBuff('lapowka','💵','Ceny skupu +20%',300,null,1,1.2);notify('💵 Ceny +20% przez 5 min','rare')}},b:{l:'🖕 Spław',f:()=>{if(Math.random()<.3){startFight({name:'Wściekły strażnik',str:6+Math.floor(player.day/5),hp:60,maxHp:60,icon:'👮'},null)}else notify('🖕 Udało się.')}}},
  {txt:'👛 Znalazłeś portfel z 40zł i dowodem osobistym...',a:{l:'📮 Oddaj',f:()=>{player.respect+=5;gainXp(30);notify('📮 +5 respektu, +30 XP','rare')}},b:{l:'💰 Zatrzymaj',f:()=>{player.money+=40;player.respect=Math.max(0,player.respect-3);player.heat=Math.min(100,player.heat+10);notify('💰 +40zł, -3 respektu','bad')}}}
 ];
-

@@ -74,11 +74,19 @@ canvas#gameCanvas{display:block;width:100%;height:100%}
 #btnAttack{background:#e63946;color:#fff}
 #btnFlee{background:#555;color:#fff}
 #evTxt{font-size:13px;text-align:center;margin:20px 0;line-height:1.6}
+#vignette{position:absolute;inset:0;pointer-events:none;z-index:12;opacity:0;transition:opacity .4s;background:radial-gradient(ellipse at center,transparent 55%,rgba(255,0,0,.5) 100%)}
+#vignette.thirst{background:radial-gradient(ellipse at center,transparent 55%,rgba(0,90,255,.5) 100%)}
+#vignette.on{animation:pulse 1.1s infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+#warnChip{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:12;display:none;background:#e63946;border:2px solid #ff6b6b;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:bold;animation:blink .7s infinite;white-space:nowrap}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 </style>
 </head>
 <body>
 <div class="game-area">
   <canvas id="gameCanvas"></canvas>
+  <div id="vignette"></div>
+  <div id="warnChip"></div>
   <button id="btnMap">🗺️</button>
   <canvas id="minimap" width="90" height="68"></canvas>
   <div class="stats-panel">

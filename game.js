@@ -1,3 +1,4 @@
+const vgEl=document.getElementById('vignette'),wcEl=document.getElementById('warnChip');
 function refreshMenu(){const c=document.getElementById('btnCont');
  if(hasSave()&&!dead){c.classList.remove('hidden');try{c.textContent='💾 KONTYNUUJ — Dzień '+JSON.parse(localStorage.getItem('prezesSave')).p.day}catch(e){c.textContent='💾 KONTYNUUJ'}}
  else c.classList.add('hidden')}
@@ -97,6 +98,8 @@ function draw(){
  ctx.fillStyle='#fff';ctx.font='bold 22px Courier New';ctx.textAlign='center';
  for(let k in zones)ctx.fillText(zones[k].label,zones[k].x+zones[k].w/2,zones[k].y+32);
  DECOR.forEach(d=>{drawSprite(d.s,d.x,d.y,d.w,true)});
+ ctx.fillStyle='#ffd700';ctx.font='bold 9px Courier New';ctx.textAlign='center';
+ ctx.fillText('PAN RYSIO 🏪',330,955);ctx.fillText('HENIO 💎',680,1335);
  if(player.base>0){ctx.font='40px Courier New';ctx.fillText(BICON[player.base],basePos.x,basePos.y);ctx.fillStyle='#fff';ctx.font='bold 10px Courier New';ctx.fillText('TWOJA BAZA',basePos.x,basePos.y-30)}
  if(!drawSprite('bench',bench.x+bench.w/2,bench.y+bench.h/2,110,true)){ctx.fillStyle='#6b4423';ctx.fillRect(bench.x,bench.y,bench.w,bench.h)}
  DUMPSTERS.forEach(d=>{ctx.globalAlpha=d.l===player.day?.45:1;if(!drawSprite('dumpster',d.x,d.y,110,true)){ctx.fillStyle='#1e5631';ctx.fillRect(d.x-45,d.y-45,90,90)}ctx.globalAlpha=1});
@@ -110,12 +113,14 @@ function draw(){
  items.forEach(it=>{if(it.taken)return;
   if(it.type==='bottle'){if(!drawSprite('bottle',it.x,it.y,34,true)){ctx.fillStyle='#4ecdc4';ctx.fillRect(it.x-4,it.y-8,8,16)}}
   else if(it.type==='scrap'){if(!drawSprite('scrap',it.x,it.y,64,true)){ctx.fillStyle='#888';ctx.fillRect(it.x-6,it.y-4,12,8)}}
-  else if(it.type==='can'){ctx.fillStyle='#ccc';ctx.fillRect(it.x-4,it.y-6,8,12)}
-  else if(it.type==='electro'){ctx.font='22px Courier New';ctx.fillText('🔌',it.x,it.y)}
+  else if(it.type==='can'){if(!drawSprite('can',it.x,it.y,30,true)){ctx.fillStyle='#ccc';ctx.fillRect(it.x-4,it.y-6,8,12)}}
+  else if(it.type==='electro'){if(!drawSprite('electro',it.x,it.y,40,true)){ctx.font='22px Courier New';ctx.fillText('🔌',it.x,it.y)}}
+  else if(it.type==='copper'){if(!drawSprite('copper',it.x,it.y,40,true)){ctx.fillStyle='#e07b39';ctx.fillRect(it.x-5,it.y-5,10,10)}}
   else{ctx.fillStyle='#e07b39';ctx.fillRect(it.x-5,it.y-5,10,10)}});
  crewAgents.forEach(a=>{const t=CREWT.find(x=>x.id===a.type);ctx.font='22px Courier New';ctx.fillText(t.icon,a.x,a.y)});
- enemies.forEach(e=>{if(e.hp<=0)return;ctx.font='26px Courier New';ctx.fillText(e.icon,e.x,e.y);
-  ctx.fillStyle='#fff';ctx.font='9px Courier New';ctx.fillText(e.name,e.x,e.y-20)});
+ enemies.forEach(e=>{if(e.hp<=0)return;
+  if(!(e.spr&&drawSprite(e.spr,e.x,e.y,44,true))){ctx.font='26px Courier New';ctx.fillText(e.icon,e.x,e.y)}
+  ctx.fillStyle='#fff';ctx.font='9px Courier New';ctx.fillText(e.name,e.x,e.y-26)});
  if(player.target){ctx.strokeStyle='rgba(255,215,0,'+(0.4+0.3*Math.sin(bob))+')';ctx.lineWidth=2;ctx.beginPath();ctx.arc(player.target.x,player.target.y,12+3*Math.sin(bob),0,7);ctx.stroke()}
  const py=player.y+Math.sin(bob)*3;
  let pkey='player',pflip=false;
@@ -153,8 +158,11 @@ function draw(){
  if(player.crewPool>=1)bt+=' 👥'+Math.floor(player.crewPool);
  if(player.heat>0)bt+=' 🚨'+player.heat;
  document.getElementById('buffs').textContent=bt;
- let sp=player.speed;if(player.hunger>=80)sp*=.7;if(player.thirst>=80)sp*=.7;
- document.getElementById('location').textContent='D'+player.day+' '+(curZone?ZSHORT[curZone]:'ULICA')+BICON[player.base]+(player.pet.owned?'🐕':'')+(player.crew.length?'👥'+player.crew.length:'')+(sp<player.speed?' 🐌':'');
+ let sp2=player.speed;if(player.hunger>=80)sp2*=.7;if(player.thirst>=80)sp2*=.7;
+ document.getElementById('location').textContent='D'+player.day+' '+(curZone?ZSHORT[curZone]:'ULICA')+BICON[player.base]+(player.pet.owned?'🐕':'')+(player.crew.length?'👥'+player.crew.length:'')+(sp2<player.speed?' 🐌':'');
+ const hCrit=player.hunger>=80,tCrit=player.thirst>=80;
+ if(hCrit||tCrit){vgEl.classList.add('on');vgEl.classList.toggle('thirst',tCrit&&!hCrit);wcEl.style.display='block';wcEl.textContent=(hCrit?'🍖 GŁÓD! ':'')+(tCrit?'💧 PRAGNIENIE! ':'')+'🐌 wolniej';}
+ else{vgEl.classList.remove('on');wcEl.style.display='none';}
  if(!document.getElementById('yardOverlay').classList.contains('hidden'))refreshJobBtn();
 }
 function loop(){update();draw();requestAnimationFrame(loop)}
